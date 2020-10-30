@@ -8,10 +8,10 @@
     </div>
 </template>
 <script>
-import Navbar from './Navbar';
+import Navbar from '../../../Layouts/Navbar';
 export default {
-  components: {
-    Navbar,
-  }
+    components: {
+        Navbar
+    }
 }
 </script>

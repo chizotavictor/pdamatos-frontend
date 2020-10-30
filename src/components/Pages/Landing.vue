@@ -7,11 +7,11 @@
         <p class="leading-normal text-base font-bold md:text-2xl mb-8 text-center md:text-left slide-in-bottom-subtitle">A game made for Kings!</p>
       
         <div class="flex w-full justify-center md:justify-start pb-24 lg:pb-0 fade-in">
-          <button class="bg-green-300 mb-3 hover:bg-gray-100 hover:text-green-500 font-semibold py-2 px-4 border border-green-200 rounded shadow">
-            Play Online Now!
-          </button>
-          <button class="bg-purple-700 ml-3 mb-3 hover:bg-gray-100 hover:text-purple-500 font-semibold py-2 px-4 border border-purple-600 text-white rounded shadow">
-            Check Game Ticket
+          <router-link tag="a" :to="{name: 'play_games'}" class="bg-green-300 mb-3 hover:bg-green-600 hover:text-white font-semibold py-2 px-4 border border-green-200 rounded shadow">
+            <i class="fa fa-gamepad text-xl mr-1"></i> Play Online Now!
+          </router-link>
+          <button class="bg-purple-700 ml-3 mb-3 hover:bg-purple-500 hover:text-white font-semibold py-2 px-4 border border-purple-600 text-white rounded shadow">
+            <i class="fa fa-file-o mr-1"></i> Check Game Ticket
           </button>
         </div>
       </div>
@@ -210,7 +210,7 @@
                 <header class="flex items-center justify-between leading-tight p-2 md:p-4">
                     <h1 class="text-lg">
                         <a class="no-underline hover:underline font-bold text-orange-700 text-center" href="#">
-                            MACAU
+                            P-DAMATOS
                         </a>
                     </h1>
                 </header>
