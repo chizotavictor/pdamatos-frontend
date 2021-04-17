@@ -17,11 +17,11 @@ export default {
     props: {
         heading: {
             type: String,
-            default: 'Our privacy policy has changed'
+            default: ''
         },
         message: {
             type: String,
-            default: "Make sure you know how these changes affect you."
+            default: ""
         }
     }
 }

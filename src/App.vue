@@ -1,19 +1,44 @@
 <template>
-  <router-view></router-view>
+  <div>
+      <router-view></router-view>
+  </div>
 </template>
 
 <script>
-/* eslint-disable */
-// import ButtonLoading from './components/Layouts/ButtonLoading';
-// import AlertSuccess from './components/Layouts/AlertSuccess';
-// import AlertError from './components/Layouts/AlertError';
-
 export default {
   name: 'App',
   components: {
-    // ButtonLoading,
-    // AlertSuccess,
-    // AlertError
   }
 }
 </script>
+<style>
+input[type="date"]::-webkit-datetime-edit, input[type="date"]::-webkit-inner-spin-button, input[type="date"]::-webkit-clear-button {
+  color: #fff;
+  position: relative;
+}
+
+input[type="date"]::-webkit-datetime-edit-year-field{
+  position: absolute !important;
+  border-left:1px solid #8c8c8c;
+  padding: 2px;
+  color:#000;
+  left: 56px;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field{
+  position: absolute !important;
+  border-left:1px solid #8c8c8c;
+  padding: 2px;
+  color:#000;
+  left: 26px;
+}
+
+
+input[type="date"]::-webkit-datetime-edit-day-field{
+  position: absolute !important;
+  color:#000;
+  padding: 2px;
+  left: 4px;
+  
+}
+</style>
