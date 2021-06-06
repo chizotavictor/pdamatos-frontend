@@ -4,6 +4,7 @@ import ticket from './modules/ticket'
 import game from './modules/game'
 import modal from './modules/modal'
 import batch from './modules/batch'
+import adminTicket from './modules/admin_ticket'
 
 const debug = process.env.NODE_ENV !== 'production'
 const store = createStore({
@@ -12,7 +13,8 @@ const store = createStore({
         ticket,
         game,
         modal,
-        batch
+        batch,
+        adminTicket
     },
     strict: debug,
     plugins: debug ? [createLogger] : []

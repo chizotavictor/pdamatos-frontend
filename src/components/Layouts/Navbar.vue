@@ -57,7 +57,7 @@
                 <button v-show="isOpenS" @click="isOpenS = false" class="h-full w-full fixed inset-0 cursor-default"></button>
                 <div v-show="isOpenS" class="absolute w-40 bg-white rounded-lg shadow-lg py-2 mt-16">
                     <a href="javascript:void()" @click="redirect2Dashboard()" class="block px-4 py-2 account-link hover:text-green-500"><i class="fa fa-desktop"></i> Dashboard</a>
-                    <a href="#" class="block px-4 py-2 account-link hover:text-green-500"><i class="fa fa-question-cirle"></i> Support</a>
+                    <!-- <a href="#" class="block px-4 py-2 account-link hover:text-green-500"><i class="fa fa-question-cirle"></i> Support</a> -->
                     <a href="javascript:void()" @click="logoutUserAction()" class="block px-4 py-2 account-link hover:text-green-500"><i class="fa fa-power-off"></i> Sign Out</a>
                 </div>
             </div>
@@ -74,10 +74,7 @@
                 to="/login" 
                 class="mt-1 block px-2 py-1 pt-2 text-yellow-500 font-semibold rounded hover:text-yellow-400 sm:mt-0 sm:ml-2"
             ><i class="fa fa-lock"></i> Sign In</router-link>
-        
-        </nav>
-
-        
+        </nav>  
     </header>
 </template>
 <script>
@@ -100,7 +97,7 @@ export default {
                     level: 4,
                     menu: [
                         {
-                            title: 'Lottery Ticket',
+                            title: 'Dashboard',
                             routeName: {name: 'lottery_ticket' }
                         },
                         {
@@ -176,7 +173,9 @@ export default {
         redirect2Dashboard() {
             var prop = localStorage.getItem('_prop')
             prop = JSON.parse(prop)
-            if(prop.level) {
+            // console.log(prop)
+            if(prop.level) 
+            {
                 var level = prop.level
                 switch (level) {
                     case "4":

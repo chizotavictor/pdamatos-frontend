@@ -2,7 +2,7 @@ import http from "./http-common"
 
 class Service {
     constructor() {
-        this.baseUrl = "http://localhost/pdamatos/api"  //"https://lottery.trustcoininvestment.com/pdamatos/api" //** */
+        this.baseUrl = "http://localhost/pdamatos/api" 
         this.authorization = '?token=' + localStorage.getItem('_key')
 
         const token = localStorage.getItem('_key')
@@ -59,12 +59,41 @@ class Service {
         return await http.get(this.baseUrl + '/tickets/user' + this.authorization + '&limit=' + limit)
     }
 
+    async getUserDashboardAnalytics() {
+        return await http.get(this.baseUrl + '/tickets/user/analytics' + this.authorization)
+    }
+
+    async getUserDashboardCurrentTickets() {
+        return await http.get(this.baseUrl + '/tickets/user/current' + this.authorization)
+    }
+
+    async getAdminDashboardAnalytics() {
+        return await http.get(this.baseUrl + '/admin/analytics' + this.authorization)
+    }
+
+    async uploadLotteryResult(data) {
+        return await http.post(this.baseUrl + '/admin/result' + this.authorization, data)
+    }
+
+    async getLotteryResult() {
+        return await http.post(this.baseUrl + '/admin/result' + this.authorization)
+    }
+
+    async getLotteryTickets(date) {
+        date = (date !== '' || date != '') ?  '&date=' + date : ''
+        return await http.get(this.baseUrl + '/admin/tickets' + this.authorization + date)
+    }
+
     async createGameTicket(data) {
         return await http.post(this.baseUrl + '/play/ticket' + this.authorization, data)
     }
 
     async updateGameTicket(data) {
         return await http.put(this.baseUrl + '/play/ticket' + this.authorization, data)
+    }
+
+    async updateGameTicketStake(data) {
+        return await http.put(this.baseUrl + '/play/ticket/stake' + this.authorization, data)
     }
 
     async DeleteGameTicketItem(code, ticket_games_id) {

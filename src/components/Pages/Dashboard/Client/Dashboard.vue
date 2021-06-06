@@ -99,31 +99,103 @@
             </div>
         </div>
         <div class="row">
-            
+            <div v-if="current_games"  class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-gray-100">
+                      <h2 class="py-2 px-4 font-semibold text-lg">Current Game Tickets</h2>
+                      <table class="min-w-full divide-y divide-gray-200">
+                          <thead class="bg-gray-50">
+                            <tr>
+                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Ticket
+                              </th>
+                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Stack
+                              </th>
+                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                  Prediction
+                              </th>
+                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Against
+                              </th>
+                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Is Result Out?
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody class="bg-white divide-y divide-gray-200">
+                              <tr v-for="(i,k) in current_games" :key="k" :style="(i.status == 'Paid') ? 'background: #FFD700': ''">
+                                  <td class="px-2 py-4 whitespace-nowrap">
+                                      <div class="flex items-center">
+                                          <div class="flex-shrink-0 h-10 w-10">
+                                              <img class="h-10 w-10 rounded-full" src="@/assets/logo.png" alt="">
+                                          </div>
+                                          <div class="ml-4">
+                                              <div class="text-sm font-medium text-gray-900">
+                                              {{i.ticket.code}} / <span class="text-red-800">{{i.game.name}}</span>
+                                              </div>
+                                           </div>
+                                      </div>
+                                  </td>
+                                  <td class="px-2 py-4 whitespace-nowrap"><span class="text-sm font-semibold px-3  text-green-800  whitespace-nowrap">₦ {{new Intl.NumberFormat().format(i.cost)}}</span></td>
+                                  <td class="px-2 py-4 whitespace-nowrap"><span class="text-sm font-semibold px-3  text-teal-800 ">{{i.number }}</span></td>
+                                  <td class="px-3 py-4 whitespace-nowrap">
+                                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-teal-100 text-green-500">
+                                      {{i.against}} ({{i.slot.time}})
+                                      </span>
+                                  </td>
+                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-black-500">
+                                      <span v-text="(i.is_result_ready == 0) ? 'No' : 'Yes'" class="font-semibold"></span>
+                                  </td>
+                              </tr>
+                              <!-- More rows... -->
+                          </tbody>
+                      </table>
+                  </div>
+                  <div v-else class="grid grid-cols-1 place-items-center mt-20 h-60">
+                     <img src="@/assets/inbox.png" class=" h-40">
+                     <h4 class="text-green-700 font-semibold text-center text-xl">No record found.</h4>
+                  </div>
         </div>
     </div>
 </template>
 <script>
-// import Call from '../../../../general-service'
+import Call from '../../../../general-service'
 import { mapMutations, mapGetters } from 'vuex'
 export default {
     components: {
     },
     mounted() {
+      this.loadAnalytics()
+      this.loadCurrentTicket()
     },
     data: () => ({
-       captions: {
-           total_tickets: 0,
-           win_balance_account: 0.00,
-           won_games: 0,
-           lost_games: 0
-       }
+      captions: {
+        total_tickets: 0,
+        win_balance_account: 0.00,
+        won_games: 0,
+        lost_games: 0
+      },
+      current_games: []
     }),
     computed: {
-        ...mapGetters(['getUserName'])
+      ...mapGetters(['getUserName'])
     },
     methods: {
-        ...mapMutations([ 'setGlobalLoadingStatus'])
+      ...mapMutations([ 'setGlobalLoadingStatus']),
+      loadAnalytics() {
+        Call.getUserDashboardAnalytics()
+        .then((data) => {
+          this.captions['total_tickets'] = data.data.all_tickets
+          this.captions['won_games'] = data.data.won_games
+          this.captions['lost_games'] = data.data.lost_games
+          this.captions['win_balance_account'] = data.data.win_balance_account
+        })
+      },
+      loadCurrentTicket() {
+        Call.getUserDashboardCurrentTickets()
+        .then((data) => {
+          this.current_games = data.data.games
+        })
+      }
     }
 }
 </script>

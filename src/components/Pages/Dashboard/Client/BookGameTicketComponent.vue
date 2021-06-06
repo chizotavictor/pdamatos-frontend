@@ -12,7 +12,7 @@
                     <AlertError v-if="loginErrMsg.title" :heading="loginErrMsg.title" :message="loginErrMsg.msg"/>
                 </div>
                 <div class="">
-                    <button class="bg-green-900 text-white p-2 mb-3" @click="newTicket()">New Ticket</button> 
+                    <button class="bg-green-900 text-white p-2 mb-3" @click="newTicket()">Create New Ticket <i class="fa fa-file"></i></button> 
                     <span class="ml-2">OR</span>
                     <input type="text" name="code" autofocus v-model="code_ticket" class="w-1/2 ml-2 p-2 bg-gray-200 font-mono" placeholder="Check your ticket.">
                     <button class="ml-3 p-1 bg-green-700 text-white" @click="browseTicket()"><i class="fa fa-retweet"></i></button>
@@ -24,11 +24,12 @@
                     <div class="row flex">
                         <article 
                             v-for="(i,k) in getAvailableGames" 
-                            :key="k" @click="selectGame(i.id, i.game)" 
-                            class="mr-2 overflow-hidden hover:shadow-outline selected:shadow-outline cursor-pointer rounded-md shadow-lg border border-yellow-600 bg-yellow-400"
+                            :key="k" 
+                            :class="['mr-2 overflow-hidden hover:shadow-outline selected:shadow-outline cursor-pointer rounded-md shadow-lg border border-yellow-600 bg-yellow-400', (i.game == name) ? 'shadow-outline' : '']"
                             :title="i.game">
                             <a href="#">
-                                <img alt="Macau" class="block" style="height:5em" :src="i.image"/>
+                                <img v-if="i.is_active" @click="selectGame(i.id, i.game)"  :alt="i.game" class="block" style="height:5em" :src="i.image"/>
+                                <img v-else :alt="i.game" class="block opacity-25" style="height:5em" :src="i.image">
                             </a>
                         </article>
                         <div class="text-red-600 sm:text-sm mt-0 mb-3">{{errors.game_id}}</div>
@@ -138,6 +139,8 @@ import Cookies from 'js-cookie'
 import TicketList from '../../../Layouts/TicketList'
 import AlertError from '../../../Layouts/AlertError'
 import Loader from '../../../Layouts/Loader'
+import { createToast } from 'mosha-vue-toastify';
+import "mosha-vue-toastify/dist/style.css"
 export default {
     components: {
         AlertError,
@@ -197,6 +200,7 @@ export default {
                 .then((data) => {
                     this.setGamePoint(data)
                 })
+            createToast('You have selected ' + this.name)
         },
         loadAvailableGames() {
             Call.availableGames()
@@ -219,6 +223,7 @@ export default {
                                     this.setTickets(rtick)
                                     var tk = {ticket_id: rtick.id, id: rtick.id, ticket_code: rtick.code}
                                     Cookies.set('last_ticket', tk, { expires: 1 });
+                                    createToast('New Game ticket added. #' + rtick.code)
                                 }
                             })
                             .catch(err => {
@@ -233,6 +238,7 @@ export default {
                                 this.isLoading = false
                                 const rtick = data.data.result
                                 this.setTickets(rtick)
+                                createToast('New Game ticket item added.')
                             })
                             .catch(err => {
                                 this.isLoading = false
@@ -290,15 +296,11 @@ export default {
                         Cookies.set('last_ticket', tk, { expires: 1 });
                     }
                 })
-                .catch(err => {
+                .catch(()=> {
                     this.isLoading = false
-                    if(err.response.status === 404) {
-                        this.loginErrMsg['title'] = 'Ticket Not Found'
-                        this.loginErrMsg['msg'] = 'The request ticket code is not found the system'
-                        return;
-                    }
-                    this.loginErrMsg['title'] = 'Something Went Wrong'
-                    this.loginErrMsg['msg'] = 'Requested operation could not be completed. ('+err.response.data.message+')'
+                    createToast('Requested ticket number not found!', {
+                        type: 'danger'
+                    })
                 })
         }
         /*

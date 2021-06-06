@@ -26,7 +26,12 @@
                                 <li class="text-orange-700 font-bold"><span class="text-black font-semibold"> Prediction:</span> {{i.number}}</li>
                             </ul>
                         </td>
-                        <td class="border px-4 py-2" colspan="1">{{money_format(i.cost)}}</td>
+                        <td class="border px-4 py-2" colspan="1">
+                            {{money_format(i.cost)}}<br>
+                            <div class="mt-2">
+                                ₦ <input type="number" @keypress="updateStake($event, i.id)" style="color:blue;width:100px" :value="i.cost">
+                            </div>
+                        </td>
                         <td class="border px-4 py-2" colspan="1"><a href="#" @click="deleteGameRecord(i.ticket_code, i.id)"> <i class="text-red-500 text-center cursor-pointer fa fa-trash" label="Delete ticket record"></i></a></td>
                     </tr>
 
@@ -35,7 +40,7 @@
                             <span>Stake:</span>
                         </td>
                         <td class="border px-4 py-2" colspan="3">
-                            {{money_format(getTickets.cost) || money_format(0.00)}}
+                            <span id="stake" class="text-green-900 text-bold">{{money_format(getTickets.cost) || money_format(0.00)}}</span>
                         </td>
                     </tr>
                     <tr style="font-size:20px">
@@ -54,6 +59,7 @@
 <script>
 import Call from '../../general-service'
 import { mapGetters, mapMutations } from 'vuex'
+import { createToast } from 'mosha-vue-toastify';
 export default {
     name: 'ticket-list',
     props: {
@@ -62,6 +68,10 @@ export default {
             default: {}
         }
     },
+    data: () => ({
+        stake: 0,
+        gt_id: 0
+    }),
     methods: {
         ...mapMutations(['setTickets', 'setGlobalLoadingStatus']),
         ...mapGetters(['getTickets']),
@@ -87,6 +97,28 @@ export default {
                     this.reloadGameTicket(code)
                 })
                 .catch(() => this.setGlobalLoadingStatus(false))
+        },
+        updateStake(e, gt_id) {
+            console.log(e.keyCode)
+            if (e.keyCode === 13) {
+                if(this.getTickets.id) {
+                    console.log(gt_id)
+                    this.setGlobalLoadingStatus(true)
+                    Call.updateGameTicketStake({
+                        game_ticket_id: gt_id,
+                        stake: e.target.value
+                    })
+                        .then((d) => {
+                            this.setGlobalLoadingStatus(false)
+                            // document.getElementById('stake').innerHTML = e.target.value
+                            console.log(d)
+                            createToast(d.data.message)
+                            this.reloadGameTicket(this.getTickets.code)
+                        })
+                        .catch(() => this.setGlobalLoadingStatus(false))
+                }
+                    
+            }
         }
     }
 }

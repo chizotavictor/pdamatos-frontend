@@ -62,7 +62,7 @@
     </div>
 </template>
 <style lang="css" scoped>
-    .bg-sidebar { background: linear-gradient(#c09f1b, #e6d9a8); }
+    .bg-sidebar { background: #c09f1b; /** linear-gradient(#c09f1b, #e6d9a8); */ }
     .cta-btn { color: #3d68ff; }
     .upgrade-btn { background: #1947ee; }
     .upgrade-btn:hover { background: #0038fd; }
@@ -88,9 +88,14 @@ export default {
                 level: 4,
                 menu: [
                     {
-                        title: 'Lottery Ticket',
-                        routeName: {name: 'lottery_ticket' },
+                        title: 'Dashboard',
+                        routeName: {name: 'dashboard_v1' },
                         icon: 'fas fa-hourglass mr-3'
+                    },
+                    {
+                        title: 'Lottery Tickets',
+                        routeName:{name: 'admin_list_tickets'},
+                        icon: 'fas fa-file mr-3'
                     },
                     {
                         title: 'Lottery Result',
@@ -98,12 +103,7 @@ export default {
                         icon: 'fas fa-bell mr-3'
                     },
                     {
-                        title: 'Users',
-                        routeName: {name: 'manage_users' },
-                        icon: 'fas fa-users mr-3'
-                    },
-                    {
-                        title: 'Agents',
+                        title: 'Manage Agents',
                         routeName: {name: 'manage_agents' },
                         icon: 'fas fa-users mr-3'
                     }
@@ -134,12 +134,7 @@ export default {
                         title: 'My Tickets',
                         routeName: {name: "my_tickets" },
                         icon: 'fas fa-file mr-3'
-                    },
-                    // {
-                    //     title: 'Settings',
-                    //     routeName: {name: "settings" },
-                    //     icon: 'fas fa-cog mr-3'
-                    // },        
+                    }        
                 ]
             },
             agent: {
@@ -173,8 +168,10 @@ export default {
                 case 'user':
                     btn = {text: 'Play Lottery', icon: 'fas fa-bookmark mr-3', routeName: 'play_games'}
                     break;
-
                 case 'agent':
+                    btn = {text: 'Play Lottery', icon: 'fas fa-bookmark mr-3', routeName: 'lottery_ticket'}
+                    break;
+                case 'admin':
                     btn = {text: 'Play Lottery', icon: 'fas fa-bookmark mr-3', routeName: 'lottery_ticket'}
                     break;
             

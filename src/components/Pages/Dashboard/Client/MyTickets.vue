@@ -62,7 +62,7 @@
                               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                   P. Win
                               </th>
-                              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              <th scope="col" class="px-0 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                   Result
                               </th>
                               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -80,7 +80,7 @@
                             </tr>
                           </thead>
                           <tbody class="bg-white divide-y divide-gray-200">
-                              <tr v-for="(i,k) in getBatch" :key="k">
+                              <tr v-for="(i,k) in getBatch" :key="k" :style="(i.status == 'Paid') ? 'background: #FFD700': ''">
                                   <td class="px-2 py-4 whitespace-nowrap">
                                       <div class="flex items-center">
                                           <div class="flex-shrink-0 h-10 w-10">
@@ -93,8 +93,8 @@
                                            </div>
                                       </div>
                                   </td>
-                                  <td class="px-2 py-4 whitespace-nowrap"><span class="text-xs font-semibold px-3 bg-green-200 text-green-800 rounded-full whitespace-nowrap">₦ {{new Intl.NumberFormat().format(i.cost)}}</span></td>
-                                  <td class="px-2 py-4 whitespace-nowrap"><span class="text-xs font-semibold px-3 bg-teal-200 text-teal-800 rounded-full"> ₦ {{new Intl.NumberFormat().format(i.potential_win) }}</span></td>
+                                  <td class="px-2 py-4 whitespace-nowrap"><span class="text-sm font-semibold px-3  text-green-800  whitespace-nowrap">₦ {{new Intl.NumberFormat().format(i.cost)}}</span></td>
+                                  <td class="px-2 py-4 whitespace-nowrap"><span class="text-sm font-semibold px-3  text-teal-800 "> ₦ {{new Intl.NumberFormat().format(i.potential_win) }}</span></td>
                                   <td class="px-1 py-4 whitespace-nowrap">
                                       <!-- <div class="text-gray-900 inline-flex font-semibold rounded-full px-1 bg-red-300" style="font-size:12px">Lost</div> -->
                                       <div class="text-gray-900 inline-flex font-semibold rounded-full px-1 bg-green-300" style="font-size:12px">Win</div>
@@ -111,18 +111,17 @@
                                       {{i.status}}
                                       </span>
                                   </td>
-                                  <td class="px-2 py-4 whitespace-nowrap text-sm text-gray-500">
-                                      <span v-text="(i.approved_by_id == null) ? 'None' : i.auditor.first_name + ' ' + i.auditor.last_name" ></span>
+                                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      <span v-text="(i.approved_by_id == null) ? 'None' : 'Approved'" class="font-semibold"></span>
                                   </td>
                                   <td class="px-3 py-4 whitespace-nowrap text-left text-sm font-medium">
-                                      <a :href="'#ex_' + i.id" rel="modal:open" class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-eye"></i></a>
+                                      <!-- <a :href="'#ex_' + i.id" rel="modal:open" class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-eye"></i></a> -->
                                   </td>
                                   <div :id="'ex_' + i.id" class="modal">
                                       <p><user-ticket-list :getTickets="i"/></p>
                                       <a href="#" rel="modal:close">Close</a>
                                   </div>
                               </tr>
-
                               <!-- More rows... -->
                           </tbody>
                       </table>
@@ -142,54 +141,46 @@
 import Call from '../../../../general-service'
 import { mapMutations, mapGetters } from 'vuex'
 import UserTicketList from '../../../Layouts/UserTicketList'
+
 export default {
   components: {
-      UserTicketList
+    UserTicketList
   },
   mounted() {
-      // this.getUserTickets();  
+    // this.getUserTickets();  
   },
   data: () => ({
-      
-      data: false,
-      p_status: '',
-      t_code: '',
-      w_status: ''
+    data: false,
+    p_status: '',
+    t_code: '',
+    w_status: '' ,
+    pageOfItems: []
   }),
   computed: {
     ...mapGetters(['getBatch', 'getUserName']),
     displayedTickets () {
       return this.paginate(this.getBatch);
-    }
+    }  
   },
   methods: {
     ...mapMutations(['setBatch', 'setGlobalLoadingStatus']),
     loadUserTickets() {
       let query = 'paginate=15&status='+this.p_status+'&ticket_code='+this.t_code+'&win_status='+this.w_status
       this.setGlobalLoadingStatus(true)
-        Call.getUserTicketList(query)
-            .then((data) => {
-                this.data = true
-                this.setGlobalLoadingStatus(false)
-                this.setBatch(data.data.games)
-            })
-            .catch(err => {
-                console.log(err)
-                this.setGlobalLoadingStatus(false)
-            })
+      Call.getUserTicketList(query)
+        .then((data) => {
+          this.data = true
+          this.setGlobalLoadingStatus(false)
+          this.setBatch(data.data.games)
+        })
+        .catch(err => {
+          console.log(err)
+          this.setGlobalLoadingStatus(false)
+        })
     },
-    setPages () {
-      let numberOfPages = Math.ceil(this.getBatch.length / this.perPage);
-      for (let index = 1; index <= numberOfPages; index++) {
-        this.pages.push(index);
-      }
-    },
-    paginate (batch) {
-      let page = this.page;
-      let perPage = this.perPage;
-      let from = (page * perPage) - perPage;
-      let to = (page * perPage);
-      return  batch.slice(from, to);
+    onChangePage(pageOfItems) {
+      // update page of items
+      this.pageOfItems = pageOfItems;
     }
   }
 }

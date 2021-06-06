@@ -40,11 +40,12 @@
                             <div class="row flex">
                                 <article 
                                     v-for="(i,k) in getAvailableGames" 
-                                    :key="k" @click="selectGame(i.id, i.game)" 
+                                    :key="k" 
                                     :class="['mr-2 overflow-hidden hover:shadow-outline selected:shadow-outline cursor-pointer rounded-md shadow-lg border border-yellow-600 bg-yellow-400', (i.game == name) ? 'shadow-outline' : '']"
                                     :title="i.game">
                                     <a href="#">
-                                        <img alt="Macau" class="block" style="height:5em" :src="i.image"/>
+                                       <img v-if="i.is_active" @click="selectGame(i.id, i.game)"  :alt="i.game" class="block" style="height:5em" :src="i.image"/>
+                                        <img v-else :alt="i.game" class="block opacity-25" style="height:5em" :src="i.image">
                                     </a>
                                 </article>
                                 <div class="text-red-600 sm:text-sm mt-0 mb-3">{{errors.game_id}}</div>
@@ -137,9 +138,7 @@
                         </div>
                     </div>
                     <div class="hidden lg:block">
-                        <!-- <div class="row items-center">
-                            <button class="text-center ml-10 font-small text-black" v-if="getTickets.code" @click="printTicket(getTickets.code)">Print Ticket <i class="fa fa-print"></i></button>
-                        </div> -->
+                        
                         <div class="lg:col-span-1 bg-gray-100">
                             <div class="p-5" id="print-area">
                                 <ticket-list :getTickets="getTickets"/>
@@ -167,7 +166,11 @@
                                 <li>Ticket No: <span>{{payment.payingTicketObject.code}}</span></li>
                                 <li>Stack: <span class="text-blue-900 bg-white px-3">{{money_format(payment.payingTicketObject.cost)}}</span></li>
                                 <li>Potential Win: <span class="text-green-900">{{money_format(payment.payingTicketObject.potential_win)}}</span></li>
+                            
                             </ul>
+                        </div>
+                        <div class="row items-center">
+                            <button class="text-center font-small text-black" v-if="payment.payingTicketObject.status != 'Pending'" @click="printTicket(getTickets.code)">Print Ticket <i class="fa fa-print"></i></button>
                         </div>
                         <div class="mt-5">
                             <div>
@@ -205,6 +208,8 @@ import Cookies from 'js-cookie'
 import TicketList from '../../../Layouts/TicketList'
 import AlertError from '../../../Layouts/AlertError'
 import Loader from '../../../Layouts/Loader'
+import { createToast } from 'mosha-vue-toastify';
+import "mosha-vue-toastify/dist/style.css"
 export default {
     components: {
         AlertError,
@@ -215,27 +220,20 @@ export default {
         // const tabs = document.querySelectorAll(".tabs");
         const tab = document.querySelectorAll(".tab");
         const panel = document.querySelectorAll(".tab-content");
-
         function onTabClick(event) {
-
             // deactivate existing active tabs and panel
-
             for (let i = 0; i < tab.length; i++) {
                 tab[i].classList.remove("active");
             }
-
             for (let i = 0; i < panel.length; i++) {
                 panel[i].classList.remove("active");
             }
-
-
             // activate new tabs and panel
             event.target.classList.add('active');
             let classString = event.target.getAttribute('data-target');
             // console.log(classString);
             document.getElementById('panels').getElementsByClassName(classString)[0].classList.add("active");
         }
-
         for (let i = 0; i < tab.length; i++) {
             tab[i].addEventListener('click', onTabClick, false);
         }
@@ -303,7 +301,12 @@ export default {
                     this.payment.payingTicketObject = data.data.ticket
                     this.pay.ticket_id = data.data.ticket.id   
                 })
-                .catch(() => this.isLoading = false)
+                .catch(() => {
+                    this.isLoading = false
+                    createToast('Requested ticket number not found!', {
+                        type: 'danger'
+                    })
+                })
         },
         ...mapMutations(['setModalVisibility', 'setAvailableGames', 'setGameDirect', 'setGameTime', 'setGamePoint', 'setTickets']),
         ...mapActions(['clearTickets']),
@@ -323,6 +326,7 @@ export default {
                 .then((data) => {
                     this.setGamePoint(data)
                 })
+                createToast('You have selected ' + this.name)
         },
         loadAvailableGames() {
             Call.availableGames()
@@ -345,6 +349,7 @@ export default {
                                     this.setTickets(rtick)
                                     var tk = {ticket_id: rtick.id, id: rtick.id, ticket_code: rtick.code}
                                     Cookies.set('last_ticket', tk, { expires: 1 });
+                                    createToast('New Game ticket added. #' + rtick.code)
                                 }
                             })
                             .catch(err => {
@@ -359,6 +364,7 @@ export default {
                                 this.isLoading = false
                                 const rtick = data.data.result
                                 this.setTickets(rtick)
+                                createToast('New Game ticket item added.')
                             })
                             .catch(err => {
                                 this.isLoading = false
@@ -416,15 +422,10 @@ export default {
                         Cookies.set('last_ticket', tk, { expires: 1 });
                     }
                 })
-                .catch(err => {
-                    this.isLoading = false
-                    if(err.response.status === 404) {
-                        this.loginErrMsg['title'] = 'Ticket Not Found'
-                        this.loginErrMsg['msg'] = 'The request ticket code is not found the system'
-                        return;
-                    }
-                    this.loginErrMsg['title'] = 'Something Went Wrong'
-                    this.loginErrMsg['msg'] = 'Requested operation could not be completed. ('+err.response.data.message+')'
+                .catch(() => {
+                    createToast('Requested ticket number not found!', {
+                        type: 'danger'
+                    })
                 })
         },
         printTicket(code){
