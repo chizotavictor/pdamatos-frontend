@@ -2,7 +2,7 @@ import http from "./http-common"
 
 class Service {
     constructor() {
-        this.baseUrl = "http://localhost/pdamatos/api" 
+        this.baseUrl = "https://pdamatos.ltd/o/api" //"http://localhost/pdamatos/api" 
         this.authorization = '?token=' + localStorage.getItem('_key')
 
         const token = localStorage.getItem('_key')
