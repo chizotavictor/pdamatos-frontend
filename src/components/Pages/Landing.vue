@@ -8,10 +8,10 @@
       
         <div class="flex w-full justify-center md:justify-start pb-24 lg:pb-0 fade-in">
           <router-link tag="a" :to="{name: 'play_games'}" class="bg-green-300 mb-3 hover:bg-green-600 hover:text-white font-semibold py-2 px-4 border border-green-200 rounded shadow">
-            <i class="fa fa-gamepad text-xl mr-1"></i> Play Online Now!!!
+            <i class="fa fa-gamepad text-xl mr-1"></i> Play Online Now!!
           </router-link>
           <button class="bg-purple-700 ml-3 mb-3 hover:bg-purple-500 hover:text-white font-semibold py-2 px-4 border border-purple-600 text-white rounded shadow">
-            <i class="fa fa-file-o mr-1"></i> Check Game Ticket
+            <i class="fa fa-file-o mr-1"></i> Check Game Ticket>
           </button>
         </div>
       </div>
