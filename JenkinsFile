@@ -1,18 +1,11 @@
 pipeline {
-  agent any
-  stages {
-
-    stage('download dependencies') {
-      steps {
-        sh 'npm ci'
-        sh 'npm outdated || exit 0'
-      }
+     agent any
+     stages {
+        stage("Build") {
+            steps {
+                sh "sudo npm install"
+                sh "sudo npm run build"
+            }
+        }
     }
-    
-    stage('Build') {
-      steps {
-        sh 'npm run build'
-      }
-    }
-  }
 }
