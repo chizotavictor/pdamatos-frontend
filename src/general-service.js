@@ -1,109 +1,145 @@
-import http from "./http-common"
+import http from "./http-common";
 
 class Service {
-    constructor() {
-        this.baseUrl = "https://pdamatos.ltd/v1/public/index.php/api" //"http://localhost/pdamatos/api" 
-        this.authorization = '?token=' + localStorage.getItem('_key')
+  constructor() {
+    this.baseUrl = "http://localhost/pdamatos/api"; // "https://pdamatos.ltd/v1/public/index.php/api" //"http://localhost/pdamatos/api"
+    this.authorization = "?token=" + localStorage.getItem("_key");
 
-        const token = localStorage.getItem('_key')
-        if (token) {
-            http.defaults.headers.common['Authorization'] = token
-        }
-
-        http.defaults.headers.common['Accept'] = "application/json"
-        http.defaults.headers.common['Content-Type'] = "application/json"
+    const token = localStorage.getItem("_key");
+    if (token) {
+      http.defaults.headers.common["Authorization"] = token;
     }
 
-    async login(user) {
-        let rUrl = this.baseUrl + '/auth/login'
-        return await http.post(rUrl, user)
-    }
+    http.defaults.headers.common["Accept"] = "application/json";
+    http.defaults.headers.common["Content-Type"] = "application/json";
+  }
 
-    async register(user) {
-        return await http.post(this.baseUrl + '/auth/register', user)
-    }
+  async login(user) {
+    let rUrl = this.baseUrl + "/auth/login";
+    return await http.post(rUrl, user);
+  }
 
-    async logoutUser() {
-        return await http.post(this.baseUrl + '/auth/logout' + this.authorization)
-    }
+  async register(user) {
+    return await http.post(this.baseUrl + "/auth/register", user);
+  }
 
-    async availableGames() {
-        return await http.get(this.baseUrl + '/games/all')
-    }
+  async logoutUser() {
+    return await http.post(this.baseUrl + "/auth/logout" + this.authorization);
+  }
 
-    async getGameDirects(id) {
-        return await http.get(this.baseUrl + '/games/' + id + '/directs')
-    }
+  async availableGames() {
+    return await http.get(this.baseUrl + "/games/all");
+  }
 
-    async getGameSlot(id) {
-        return await http.get(this.baseUrl + '/games/' + id + '/times')
-    }
+  async getGameDirects(id) {
+    return await http.get(this.baseUrl + "/games/" + id + "/directs");
+  }
 
-    async getGamePoints() {
-        return await http.get(this.baseUrl + '/games/points')
-    }
+  async getGameSlot(id) {
+    return await http.get(this.baseUrl + "/games/" + id + "/times");
+  }
 
-    async getGameTicket(code) {
-        return await http.get(this.baseUrl + '/play/ticket/'+ code + this.authorization)
-    }
+  async getGamePoints() {
+    return await http.get(this.baseUrl + "/games/points");
+  }
 
-    async AgentProcessGameTicket(data) {
-        return await http.post(this.baseUrl + '/pay/ticket' + this.authorization, data)
-    }
+  async getGameTicket(code) {
+    return await http.get(
+      this.baseUrl + "/play/ticket/" + code + this.authorization
+    );
+  }
 
-    async getUserTicketList(query) {
-        return await http.get(this.baseUrl + '/tickets/user' + this.authorization + '&' + query)
-    }
+  async AgentProcessGameTicket(data) {
+    return await http.post(
+      this.baseUrl + "/pay/ticket" + this.authorization,
+      data
+    );
+  }
 
-    async getUserTicketListOnLastLimit(limit) {
-        return await http.get(this.baseUrl + '/tickets/user' + this.authorization + '&limit=' + limit)
-    }
+  async getUserTicketList(query) {
+    return await http.get(
+      this.baseUrl + "/tickets/user" + this.authorization + "&" + query
+    );
+  }
 
-    async getUserDashboardAnalytics() {
-        return await http.get(this.baseUrl + '/tickets/user/analytics' + this.authorization)
-    }
+  async getUserTicketListOnLastLimit(limit) {
+    return await http.get(
+      this.baseUrl + "/tickets/user" + this.authorization + "&limit=" + limit
+    );
+  }
 
-    async getUserDashboardCurrentTickets() {
-        return await http.get(this.baseUrl + '/tickets/user/current' + this.authorization)
-    }
+  async getUserDashboardAnalytics() {
+    return await http.get(
+      this.baseUrl + "/tickets/user/analytics" + this.authorization
+    );
+  }
 
-    async getAdminDashboardAnalytics() {
-        return await http.get(this.baseUrl + '/admin/analytics' + this.authorization)
-    }
+  async getUserDashboardCurrentTickets() {
+    return await http.get(
+      this.baseUrl + "/tickets/user/current" + this.authorization
+    );
+  }
 
-    async uploadLotteryResult(data) {
-        return await http.post(this.baseUrl + '/admin/result' + this.authorization, data)
-    }
+  async getAdminDashboardAnalytics() {
+    return await http.get(
+      this.baseUrl + "/admin/analytics" + this.authorization
+    );
+  }
 
-    async getLotteryResult() {
-        return await http.post(this.baseUrl + '/admin/result' + this.authorization)
-    }
+  async uploadLotteryResult(data) {
+    return await http.post(
+      this.baseUrl + "/admin/result" + this.authorization,
+      data
+    );
+  }
 
-    async getLotteryTickets(date) {
-        date = (date !== '' || date != '') ?  '&date=' + date : ''
-        return await http.get(this.baseUrl + '/admin/tickets' + this.authorization + date)
-    }
+  async getLotteryResult() {
+    return await http.post(this.baseUrl + "/admin/result" + this.authorization);
+  }
 
-    async createGameTicket(data) {
-        return await http.post(this.baseUrl + '/play/ticket' + this.authorization, data)
-    }
+  async getLotteryTickets(date) {
+    date = date !== "" || date != "" ? "&date=" + date : "";
+    return await http.get(
+      this.baseUrl + "/admin/tickets" + this.authorization + date
+    );
+  }
 
-    async updateGameTicket(data) {
-        return await http.put(this.baseUrl + '/play/ticket' + this.authorization, data)
-    }
+  async createGameTicket(data) {
+    return await http.post(
+      this.baseUrl + "/play/ticket" + this.authorization,
+      data
+    );
+  }
 
-    async updateGameTicketStake(data) {
-        return await http.put(this.baseUrl + '/play/ticket/stake' + this.authorization, data)
-    }
+  async updateGameTicket(data) {
+    return await http.put(
+      this.baseUrl + "/play/ticket" + this.authorization,
+      data
+    );
+  }
 
-    async DeleteGameTicketItem(code, ticket_games_id) {
-        return await http.delete(this.baseUrl + '/play/ticket/' + code + '/' + ticket_games_id + this.authorization)
-    }
+  async updateGameTicketStake(data) {
+    return await http.put(
+      this.baseUrl + "/play/ticket/stake" + this.authorization,
+      data
+    );
+  }
 
-    async PrintGameTicket(code) {
-        return await http.get(this.baseUrl + '/report/' + code)
-    }
+  async DeleteGameTicketItem(code, ticket_games_id) {
+    return await http.delete(
+      this.baseUrl +
+        "/play/ticket/" +
+        code +
+        "/" +
+        ticket_games_id +
+        this.authorization
+    );
+  }
+
+  async PrintGameTicket(code) {
+    return await http.get(this.baseUrl + "/report/" + code);
+  }
 }
 
-let instance = new Service;
+let instance = new Service();
 export default instance;
