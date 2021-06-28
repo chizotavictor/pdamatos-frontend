@@ -93,8 +93,10 @@ class Service {
     );
   }
 
-  async getLotteryResult() {
-    return await http.post(this.baseUrl + "/admin/result" + this.authorization);
+  async getLotteryResult(data) {
+    return await http.get(
+      this.baseUrl + "/play/load/result" + this.authorization + "&" + data
+    );
   }
 
   async getLotteryTickets(date) {
