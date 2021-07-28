@@ -44,6 +44,18 @@
           >
             Check Ticket W. Status
           </button>
+          <button
+            data-target="panel-4"
+            @click="setActiveTab(3)"
+            :class="[
+              'tab ext-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none ',
+              getActiveTab == 3
+                ? 'active text-blue-500 border-b-2 font-medium border-blue-500'
+                : ''
+            ]"
+          >
+            Lottery Cashout
+          </button>
         </nav>
       </div>
     </did>
@@ -58,6 +70,9 @@
       <div class="panel-3 tab-content">
         <check-ticket-result />
       </div>
+      <div class="panel-4 tab-content">
+        <cashout />
+      </div>
     </div>
   </div>
 </template>
@@ -65,11 +80,13 @@
 import RecordTicketResult from "../../../Forms/RecordTicketResult.vue";
 import BrowseTicketResult from "../../../Report/BrowseTicketResult.vue";
 import CheckTicketResult from "../../../Report/CheckTicketResult.vue";
+import Cashout from "../../../Report/Cashout.vue";
 export default {
   components: {
     RecordTicketResult,
     BrowseTicketResult,
-    CheckTicketResult
+    CheckTicketResult,
+    Cashout
   },
   mounted() {
     const tab = document.querySelectorAll(".tab");

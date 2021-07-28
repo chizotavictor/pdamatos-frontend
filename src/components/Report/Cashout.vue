@@ -50,7 +50,7 @@
 </template>
 <script>
 import Call from "../../general-service";
-import ResultCheckerContent from "./ResultCheckerContent.vue";
+import ResultCheckerContent from "./ResultCheckerContent2.vue";
 import AlertError from "../Layouts/AlertError.vue";
 import Loader from "../Layouts/Loader.vue";
 export default {

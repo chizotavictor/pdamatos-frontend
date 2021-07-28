@@ -2,7 +2,8 @@ import http from "./http-common";
 
 class Service {
   constructor() {
-    this.baseUrl = "https://pdamatos.ltd/v1/public/index.php/api"; //"http://localhost/pdamatos/api"
+    this.baseUrl = "http://localhost/pdamatos/index.php/api";
+    // this.baseUrl = "https://pdamatos.ltd/v1/public/index.php/api"; //"http://localhost/pdamatos/api"
     this.authorization = "?token=" + localStorage.getItem("_key");
 
     const token = localStorage.getItem("_key");
@@ -96,6 +97,12 @@ class Service {
   async getLotteryResult(data) {
     return await http.get(
       this.baseUrl + "/play/load/result" + this.authorization + "&" + data
+    );
+  }
+
+  async getLotteryResultChecker(data) {
+    return await http.get(
+      this.baseUrl + "/game/result/checker" + this.authorization + "&" + data
     );
   }
 

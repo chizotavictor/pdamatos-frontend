@@ -124,7 +124,7 @@
                 </div>
               </div>
             </div>
-            <div class="grid ">
+            <div v-if="ticket.game_direct_id != 3" class="grid ">
               <div class="col-span-0 sm:col-span-3">
                 <label
                   for="Direct"
@@ -193,11 +193,36 @@
                 </textarea>
               </div>
             </div>
+
+            <div v-else class="grid ">
+              <div class="col-span-0 sm:col-span-3">
+                <label
+                  for="Direct"
+                  class="block text-sm  mt-5 font-bold text-gray-700"
+                  ></label
+                >
+                <input
+                  name="first_position"
+                  v-model="number6d"
+                  placeholder="6D result number"
+                  class="mt-1 block w-full font-medium py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
+            </div>
           </div>
           <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
             <button
+              v-if="ticket.game_direct_id != 3"
               type="button"
               @click="uploadResult()"
+              class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-md font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Upload Result
+            </button>
+            <button
+              v-else
+              type="button"
+              @click="uploadResult6D()"
               class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-md font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Upload Result
@@ -227,7 +252,8 @@ export default {
   data: () => ({
     request: { title: "", msg: "" },
     ticket: {},
-    isLoading: false
+    isLoading: false,
+    number6d: ''
   }),
   computed: {
     ...mapGetters([
@@ -263,7 +289,7 @@ export default {
         this.setGamePoint(data);
       });
     },
-    uploadResult() {
+    checks() {
       let verified = true;
       const FIELD_INPUT_ERROR = "Field Input Error";
       if (!this.ticket.game_id)
@@ -282,10 +308,42 @@ export default {
         (this.request.title = FIELD_INPUT_ERROR),
           (this.request.msg = "Please select game slot."),
           (verified = false);
-
+      return verified;
+    },
+    uploadResult() {
+      const FIELD_INPUT_ERROR = "Field Input Error";
+      let verified = this.checks()
       if (verified) {
         this.request = {};
         this.isLoading = true;
+        Call.uploadLotteryResult(this.ticket)
+          .then(data => {
+            this.isLoading = false;
+            let response = data.data;
+            if (response.success) {
+              this.request = {};
+              this.ticket = {};
+              createToast(response.message);
+            } else {
+              (this.request.title = FIELD_INPUT_ERROR),
+                (this.request.msg = response.message);
+              createToast(response.message, {
+                type: "danger"
+              });
+            }
+          })
+          .catch(function() {
+            this.isLoading = false;
+          });
+      }
+    },
+    uploadResult6D() {
+      const FIELD_INPUT_ERROR = "Field Input Error";
+      let verified = this.checks()
+      if (verified) {
+        this.request = {};
+        this.isLoading = true;
+        this.ticket['first_position'] = this.number6d;
         Call.uploadLotteryResult(this.ticket)
           .then(data => {
             this.isLoading = false;
