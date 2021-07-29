@@ -135,6 +135,12 @@ class Service {
     );
   }
 
+  async processCashout(data) {
+    return await http.put(
+      this.baseUrl + "/admin/tickets/cashout" + this.authorization + "&" + data
+    );
+  }
+
   async DeleteGameTicketItem(code, ticket_games_id) {
     return await http.delete(
       this.baseUrl +

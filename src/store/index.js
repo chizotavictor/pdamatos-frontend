@@ -5,6 +5,7 @@ import result from "./modules/result";
 import game from "./modules/game";
 import modal from "./modules/modal";
 import batch from "./modules/batch";
+import report from "./modules/report";
 import adminTicket from "./modules/admin_ticket";
 
 const debug = process.env.NODE_ENV !== "production";
@@ -16,6 +17,7 @@ const store = createStore({
     game,
     modal,
     batch,
+    report,
     adminTicket
   },
   strict: debug,

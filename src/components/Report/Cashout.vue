@@ -29,14 +29,143 @@
 
     <div class="grid grid-cols-3 gap-4">
       <div class="col-span-4 p-2 mt-3">
-        <result-checker-content 
-          v-if="result||result!=null" 
-          :data="result" 
-          :stake="stake" 
-          :cashout="cashout" 
-          :balance="balance"
-          :potential_win="potential_win" 
-        />
+        <div
+          class="row overflow-y-scroll w-full"
+          style="padding:0px;margin:0px;"
+        >
+
+          <table class="table-auto w-full" style="margin-top: 20px;">
+            <tbody>
+              <tr>
+                <td
+                  class="border px-4 py-2 text-gray-900 font-medium"
+                  colspan="3"
+                  style="font-size:17px"
+                >
+                  Tickets
+                </td>
+                <td
+                  class="border px-4 py-2 text-gray-900 font-medium"
+                  colspan="3"
+                  style="font-size:17px"
+                >
+                  Stake
+                </td>
+                <td
+                  class="border px-4 py-2 text-gray-900 font-medium"
+                  colspan="3"
+                  style="font-size:17px"
+                >
+                  Position
+                </td>
+                <td
+                  class="border px-4 py-2 text-gray-900 font-medium"
+                  colspan="3"
+                  style="font-size:17px"
+                >
+                  Is Result Ready?.
+                </td>
+                <td
+                  class="border px-4 py-2 text-gray-900 font-medium"
+                  colspan="3"
+                  style="font-size:17px"
+                >
+                  Order cashout
+                </td>
+              </tr>
+              <tr v-for="(i, k) in result" :key="k">
+                <td
+                  class="border px-4 py-2 text-red-800 font-medium"
+                  colspan="3"
+                  style="font-size:17px"
+                >
+                  {{i.ticket.ticket_code}} // {{i.ticket.number}}
+                </td>
+                <td
+                  class="border px-4 py-2 font-bold"
+                  colspan="3"
+                  style="font-size:25px"
+                >
+                  ₦ {{new Intl.NumberFormat().format(i.ticket.cost) }}
+                </td>
+                <td
+                  class="border px-4 py-2 font-bold"
+                  colspan="2"
+                  style="font-size:25px"
+                >
+                  {{i.position}}
+                </td>
+                <td
+                  class="border px-4 py-2 font-bold"
+                  colspan="3"
+                  style="font-size:25px"
+                >
+                  {{i.is_result_ready }}
+                </td>
+                <td
+                  class="border px-4 py-2 text-green-800 font-bold"
+                  colspan="8"
+                  style="font-size:17px"
+                >
+                  <span>{{(i.ticket.paid_off)? "Yes": "No"}}</span>
+                  
+                  <small class="text-yellow-700">
+                    <a href="#" @click="processCashout(i.ticket.id, i.ticket.ticket_code)"><i class="fas fa-coins"></i> Process Cashout</a>
+                  </small>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border px-4 py-2 text-red-600 font-medium"
+                  colspan="3"
+                  style="font-size:17px"
+                >
+                  Stack
+                </td>
+                <td
+                  class="border px-4 py-2 text-red-600 font-bold"
+                  colspan="8"
+                  style="font-size:17px"
+                >
+                  ₦ {{new Intl.NumberFormat().format(stake)}}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border px-4 py-2 font-medium"
+                  colspan="3"
+                  style="font-size:17px"
+                >
+                  Cash Out
+                </td>
+                <td
+                  class="border px-4 py-2  font-bold"
+                  colspan="8"
+                  style="font-size:17px"
+                >
+                  ₦ {{new Intl.NumberFormat().format(cashout)}}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border px-4 py-2 text-green-800 font-medium"
+                  colspan="3"
+                  style="font-size:17px"
+                >
+                  Balance
+                </td>
+                <td
+                  class="border px-4 py-2 text-green-800 font-bold"
+                  colspan="8"
+                  style="font-size:17px"
+                >
+                  ₦ {{new Intl.NumberFormat().format(balance)}}
+                </td>
+                
+              </tr>
+            </tbody>
+          </table>
+        </div>
          <div class="row">
             <AlertError
               v-if="loginErrMsg.title"
@@ -50,12 +179,13 @@
 </template>
 <script>
 import Call from "../../general-service";
-import ResultCheckerContent from "./ResultCheckerContent2.vue";
+// import ResultCheckerContent from "./ResultCheckerContent2.vue";
 import AlertError from "../Layouts/AlertError.vue";
 import Loader from "../Layouts/Loader.vue";
+import {mapMutations} from "vuex";
 export default {
   components: {
-    ResultCheckerContent,
+    // ResultCheckerContent,
     AlertError,
     Loader
   },
@@ -71,6 +201,7 @@ export default {
     cashout: null,
   }),
   methods: {
+    ...mapMutations(['setData', 'setStake', 'setPotentialWin', 'setBalance', 'setCashout']),
     checker() {
       if(!this.ticket_code) {
         alert('Please enter Ticket code!')
@@ -95,6 +226,35 @@ export default {
         })
         .catch(() => {
           this.isLoading = false
+        })
+    },
+    processCashout(tk_id, tcode) {
+      this.isLoading = true
+      let qs = "ticket_id="+ tk_id
+      Call.processCashout(qs)
+        .then((data) => {
+          let success = data.data.success;
+          if(success) {
+            let rqs = "ticket_code=" + tcode
+            Call.getLotteryResultChecker(rqs)
+              .then((data) => {
+                this.isLoading = false
+                this.isLoading = false
+                if(data.data.success) {
+                  this.loginErrMsg = {}
+                  let dt = data.data;
+                  this.result =dt.data;
+                  this.stake =dt.stake;
+                  this.potential_win =dt.potential_win;
+                  this.balance =dt.balance;
+                  this.cashout =dt.cashout;
+                } else {
+                  this.loginErrMsg.title = "Something went wrong!";
+                  this.loginErrMsg.msg = data.data.message;
+                }
+              })
+              .catch(() => this.isLoading = false)
+          }
         })
     }
   }
