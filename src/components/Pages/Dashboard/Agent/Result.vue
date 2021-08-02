@@ -2,7 +2,7 @@
   <div class="p-0">
     <div class="grid grid-cols-3 gap-4 m-0">
       <div class="col-span-3">
-        <h1 class="text-gray-800 text-xl font-medium">Manage Agent</h1>
+        <h1 class="text-gray-800 text-xl font-medium">Lottery Result</h1>
       </div>
     </div>
     <did class="row">
@@ -12,13 +12,13 @@
             data-target="panel-1"
             @click="setActiveTab(0)"
             :class="[
-              'tab text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none ',
+              'tab ext-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none ',
               getActiveTab == 0
                 ? 'active text-blue-500 border-b-2 font-medium border-blue-500'
                 : ''
             ]"
           >
-            Add Agent
+            Browse Lottery Result
           </button>
           <button
             data-target="panel-2"
@@ -30,7 +30,7 @@
                 : ''
             ]"
           >
-            View Agent Records
+            Check Ticket W. Status
           </button>
           <button
             data-target="panel-3"
@@ -42,56 +42,61 @@
                 : ''
             ]"
           >
-            
+            Lottery Cashout
           </button>
-      
         </nav>
       </div>
     </did>
 
     <div id="panels">
       <div class="panel-1 tab-content active py-5">
-        <add-agent />
+        <browse-ticket-result />
       </div>
-      <div class="panel-2 tab-content py-5">
-        <view-agent />
+      <div class="panel-2 tab-content">
+        <check-ticket-result />
       </div>
       <div class="panel-3 tab-content">
-        <div><span>This feature is pending for now!</span></div>
+        <cashout />
       </div>
     </div>
   </div>
 </template>
 <script>
-import AddAgent from "../../../Manage/AddAgent.vue";
-import ViewAgent from "../../../Manage/ViewAgent.vue";
+import BrowseTicketResult from "../../../Report/BrowseTicketResult.vue";
+import CheckTicketResult from "../../../Report/CheckTicketResult.vue";
+import Cashout from "../../../Report/Cashout.vue";
 export default {
   components: {
-    AddAgent,
-    ViewAgent
+    BrowseTicketResult,
+    CheckTicketResult,
+    Cashout
   },
   mounted() {
     const tab = document.querySelectorAll(".tab");
     const panel = document.querySelectorAll(".tab-content");
     function onTabClick(event) {
-        // deactivate existing active tabs and panel
-        for (let i = 0; i < tab.length; i++) {
-            tab[i].classList.remove("active");
-        }
-        for (let i = 0; i < panel.length; i++) {
-            panel[i].classList.remove("active");
-        }
-        // activate new tabs and panel
-        event.target.classList.add('active');
-        let classString = event.target.getAttribute('data-target');
-        // console.log(classString);
-        document.getElementById('panels').getElementsByClassName(classString)[0].classList.add("active");
+      // deactivate existing active tabs and panel
+      for (let i = 0; i < tab.length; i++) {
+        tab[i].classList.remove("active");
+      }
+
+      for (let i = 0; i < panel.length; i++) {
+        panel[i].classList.remove("active");
+      }
+      // activate new tabs and panel
+      event.target.classList.add("active");
+      let classString = event.target.getAttribute("data-target");
+      document
+        .getElementById("panels")
+        .getElementsByClassName(classString)[0]
+        .classList.add("active");
     }
+
     for (let i = 0; i < tab.length; i++) {
-        tab[i].addEventListener('click', onTabClick, false);
+      tab[i].addEventListener("click", onTabClick, false);
     }
-    this.getActiveTab = 0
-    localStorage.setItem('lactiveTab', 0)
+    this.getActiveTab = 0;
+    localStorage.setItem("lactiveTab", 0);
   },
   data: () => ({
     isLoading: false,

@@ -205,6 +205,7 @@ export default {
     checker() {
       if(!this.ticket_code) {
         alert('Please enter Ticket code!')
+        return;
       }
       let data = 'ticket_code=' + this.ticket_code
       this.isLoading = true
@@ -231,31 +232,71 @@ export default {
     processCashout(tk_id, tcode) {
       this.isLoading = true
       let qs = "ticket_id="+ tk_id
-      Call.processCashout(qs)
-        .then((data) => {
-          let success = data.data.success;
-          if(success) {
-            let rqs = "ticket_code=" + tcode
-            Call.getLotteryResultChecker(rqs)
-              .then((data) => {
-                this.isLoading = false
-                this.isLoading = false
-                if(data.data.success) {
-                  this.loginErrMsg = {}
-                  let dt = data.data;
-                  this.result =dt.data;
-                  this.stake =dt.stake;
-                  this.potential_win =dt.potential_win;
-                  this.balance =dt.balance;
-                  this.cashout =dt.cashout;
-                } else {
-                  this.loginErrMsg.title = "Something went wrong!";
-                  this.loginErrMsg.msg = data.data.message;
-                }
-              })
-              .catch(() => this.isLoading = false)
+
+      var prop = localStorage.getItem('_prop')
+      prop = JSON.parse(prop)
+
+      if(prop.level) {
+        var level = prop.level
+          switch (level) {
+            case "4":
+              Call.processCashout(qs)
+                .then((data) => {
+                  let success = data.data.success;
+                  if(success) {
+                    let rqs = "ticket_code=" + tcode
+                    Call.getLotteryResultChecker(rqs)
+                      .then((data) => {
+                        this.isLoading = false
+                        this.isLoading = false
+                        if(data.data.success) {
+                          this.loginErrMsg = {}
+                          let dt = data.data;
+                          this.result =dt.data;
+                          this.stake =dt.stake;
+                          this.potential_win =dt.potential_win;
+                          this.balance =dt.balance;
+                          this.cashout =dt.cashout;
+                        } else {
+                          this.loginErrMsg.title = "Something went wrong!";
+                          this.loginErrMsg.msg = data.data.message;
+                        }
+                      })
+                      .catch(() => this.isLoading = false)
+                  }
+                })      
+              break;
+            case "3":
+              Call.processCashoutByAgent(qs)
+                .then((data) => {
+                  let success = data.data.success;
+                  if(success) {
+                    let rqs = "ticket_code=" + tcode
+                    Call.getLotteryResultChecker(rqs)
+                      .then((data) => {
+                        this.isLoading = false
+                        this.isLoading = false
+                        if(data.data.success) {
+                          this.loginErrMsg = {}
+                          let dt = data.data;
+                          this.result =dt.data;
+                          this.stake =dt.stake;
+                          this.potential_win =dt.potential_win;
+                          this.balance =dt.balance;
+                          this.cashout =dt.cashout;
+                        } else {
+                          this.loginErrMsg.title = "Something went wrong!";
+                          this.loginErrMsg.msg = data.data.message;
+                        }
+                      })
+                      .catch(() => this.isLoading = false)
+                  }
+                })    
+              break;
+            default:
+                break;
           }
-        })
+      }
     }
   }
 };

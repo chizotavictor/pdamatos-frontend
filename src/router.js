@@ -9,6 +9,9 @@ import BookGameTicketComponent from "./components/Pages/Dashboard/Client/BookGam
 import ResultsComponent from "./components/Pages/Dashboard/Result.vue";
 import ClientDashboard from "./components/Pages/Dashboard/Client/Dashboard.vue";
 import AdminDashboard from "./components/Pages/Dashboard/Admin/Dashboard.vue";
+import AgentDashboard from "./components/Pages/Dashboard/Agent/Dashboard.vue";
+import AgentTickets from "./components/Pages/Dashboard/Agent/Tickets.vue";
+import AgentResult from "./components/Pages/Dashboard/Agent/Result.vue";
 import MyTickets from "./components/Pages/Dashboard/Client/MyTickets.vue";
 import DashboardIndex from "./components/Pages/Dashboard/Index.vue";
 import SettingsComponent from "./components/Pages/Dashboard/Client/Settings.vue";
@@ -70,6 +73,16 @@ const routes = [
             component: LotteryResult
           },
           {
+            path: "/agents/tickets",
+            name: "agent_tickets",
+            component: AgentTickets
+          },
+          {
+            path: "/agents/results",
+            name: "agent_tickets_result",
+            component: AgentResult
+          },
+          {
             path: "/participants/agents",
             name: "manage_agents",
             component: ManageAgent
@@ -120,6 +133,8 @@ function getUserDashboard() {
     switch (level) {
       case "4":
         return AdminDashboard;
+      case "3":
+        return AgentDashboard;
       default:
         break;
     }

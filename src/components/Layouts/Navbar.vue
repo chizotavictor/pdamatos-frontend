@@ -30,7 +30,7 @@
             <router-link 
                 v-if="isUserLoggedIn" 
                 tag="a" 
-                :to="{name: 'play_games'}" 
+                :to="{name: getAccountPlayBoard}" 
                 :class="[ currentPage.includes('results') ? activeClass : '' , 'mt-1 block px-2 py-1 pt-2 text-white font-semibold rounded hover:text-yellow-400 sm:mt-0 sm:ml-2']"
             >Play</router-link>
             <router-link 
@@ -120,10 +120,6 @@ export default {
                         {
                             title: 'Lottery Ticket',
                             routeName: {name: 'lottery_ticket' }
-                        },
-                        {
-                            title: 'Users',
-                            routeName: {name: 'manage_users' },
                         }
                     ]
                 },
@@ -140,6 +136,12 @@ export default {
                         }
                     ]
                 }
+            },
+            lottery_board: {
+                'admin': 'lottery_ticket',
+                'agent': 'lottery_ticket',
+                'user': 'play_games',
+                'guest': 'play_games'
             }
         }
     },
@@ -151,7 +153,11 @@ export default {
             let role = this.roles[this.getUserAuthLevel]
             return this.menu[role] || [];
         },
-        ...mapGetters(['getUserAuthLevel', 'getTicketsLength', 'getUserName', 'getGlobalLoadingStatus', 'isUserLoggedIn'])
+        ...mapGetters(['getUserAuthLevel', 'getTicketsLength', 'getUserName', 'getGlobalLoadingStatus', 'isUserLoggedIn']),
+        getAccountPlayBoard() {
+            let role = this.roles[this.getUserAuthLevel]
+            return this.lottery_board[role]
+        }
     },
     methods: {
         ...mapMutations(['setModalVisibility', 'setGlobalLoadingStatus']),
@@ -181,7 +187,9 @@ export default {
                     case "4":
                         this.$router.push({name: "dashboard_v1"})        
                         break;
-                
+                    case "3":
+                        this.$router.push({name: "dashboard_v1"})
+                        break;
                     default:
                         break;
                 }
@@ -190,7 +198,6 @@ export default {
                  * For User Account
                  */
                 this.$router.push({name: "dashboard_v1"}) 
-                // alert("Dashboard not created yet!")
             }
         }
     }

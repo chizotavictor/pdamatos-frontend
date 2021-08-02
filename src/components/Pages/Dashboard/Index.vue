@@ -21,7 +21,6 @@
                     <i :class="i.icon"></i>
                     {{i.title}}
                 </router-link >
-
                 <!-- <a href="blank.html" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
                     <i class="fas fa-sticky-note mr-3"></i>
                     Blank Page
@@ -109,19 +108,6 @@ export default {
                     }
                 ]
             },
-            // agent: {
-            //     level: 3,
-            //     menu: [
-            //         {
-            //             title: 'Lottery Ticket',
-            //             routeName: {name: 'lottery_ticket' }
-            //         },
-            //         {
-            //             title: 'Users',
-            //             routeName: {name: 'manage_users' },
-            //         }
-            //     ]
-            // },
             user: {
                 level: 1,
                 menu: [
@@ -147,9 +133,14 @@ export default {
                     },
                     {
                         title: 'Processed Tickets',
-                        routeName: "",
+                        routeName: {name: 'agent_tickets'},
                         icon: 'fas fa-file mr-3'
                     },
+                    {
+                        title: 'Lottery Result',
+                        routeName: {name: 'agent_tickets_result'},
+                        icon: 'fas fa-trophy mr-3'
+                    }
                 ]
             }
         }
@@ -202,9 +193,9 @@ export default {
                     this.setGlobalLoadingStatus(false)
                     this.$router.push({name: 'login'})
                 })
-                .catch(err => {
+                .catch(() => {
                     this.setGlobalLoadingStatus(false)
-                    console.log(err)
+                    this.$router.push({name: 'login'})
                 })
         }
     }

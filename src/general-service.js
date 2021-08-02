@@ -88,10 +88,36 @@ class Service {
     );
   }
 
+  async getAgentDashboardAnalytics() {
+    return await http.get(
+      this.baseUrl + "/agent/analytics" + this.authorization
+    );
+  }
+
+  async getAgentTickets(date) {
+    date = date !== "" || date != "" ? "&date=" + date : "";
+    return await http.get(
+      this.baseUrl + "/agent/tickets" + this.authorization + date
+    );
+  }
+
   async uploadLotteryResult(data) {
     return await http.post(
       this.baseUrl + "/admin/result" + this.authorization,
       data
+    );
+  }
+
+  async createAgent(data) {
+    return await http.post(
+      this.baseUrl + "/admin/agent/create" + this.authorization,
+      data
+    );
+  }
+
+  async listAgent() {
+    return await http.get(
+      this.baseUrl + "/admin/agent" + this.authorization
     );
   }
 
@@ -138,6 +164,12 @@ class Service {
   async processCashout(data) {
     return await http.put(
       this.baseUrl + "/admin/tickets/cashout" + this.authorization + "&" + data
+    );
+  }
+
+  async processCashoutByAgent(data) {
+    return await http.put(
+      this.baseUrl + "/agent/tickets/cashout" + this.authorization + "&" + data
     );
   }
 
