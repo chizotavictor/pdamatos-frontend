@@ -30,7 +30,7 @@
                 <br>www.pdamatos.ltd</p>
 
             <br>
-            <center><button id="btnPrint" class="hidden-print centered" style="text-decoration:underline">Print</button></center>
+            <center><button  @click="printReport()" class="hidden-print centered" style="text-decoration:underline">Print</button></center>
         </div>
         <center></center>
     </div>
@@ -47,7 +47,6 @@ export default {
             })
             .catch(() => {
                 alert('Error occured while printing document. Please try again or contact support!')
-
             })
     },
     mounted() {
@@ -59,7 +58,12 @@ export default {
     data: () => ({
         code: '',
         result: {}
-    })
+    }),
+    methods: {
+        printReport() {
+            window.print();
+        }
+    }
 }
 </script>
 
