@@ -187,6 +187,10 @@ class Service {
   async PrintGameTicket(code) {
     return await http.get(this.baseUrl + "/report/" + code);
   }
+
+  async PrintGameTicketReport(code) {
+    return await http.get(this.baseUrl + "/report/pdf/" + code);
+  }
 }
 
 let instance = new Service();

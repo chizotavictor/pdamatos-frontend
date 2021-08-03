@@ -20,6 +20,7 @@ import LotteryResult from "./components/Pages/Dashboard/Admin/LotteryResult.vue"
 import LotteryTicket from "./components/Pages/Dashboard/Admin/LotteryTicket.vue";
 import ManageAgent from "./components/Pages/Dashboard/Admin/ManageAgent.vue";
 import ListTickets from "./components/Pages/Dashboard/Admin/ListTickets.vue";
+import PdfReport from "./components/Report/PdfReport.vue";
 
 const routes = [
   {
@@ -100,6 +101,11 @@ const routes = [
         component: LotteryTicket
       }
     ]
+  },
+  {
+    path: "/pdfreport/:code",
+    name: "pdfreport",
+    component: PdfReport
   },
   {
     path: "/login",

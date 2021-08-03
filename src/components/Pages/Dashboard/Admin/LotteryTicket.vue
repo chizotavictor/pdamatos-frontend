@@ -172,6 +172,9 @@
                         <div class="row items-center">
                             <button class="text-center font-small text-black" v-if="payment.payingTicketObject.status != 'Pending'" @click="printTicket(getTickets.code)">Print Ticket <i class="fa fa-print"></i></button>
                         </div>
+                        <div class="row items-center">
+                            <button class="text-center font-small text-black" v-if="payment.payingTicketObject.status != 'Pending'" @click="bluetoothPrintTicket(payment.payingTicketObject.code)">Print Ticket via Bluetooth Printer<i class="fa fa-print"></i></button>
+                        </div>
                         <div class="mt-5">
                             <div>
                                 <label for="">Select Payment Method:</label>
@@ -210,6 +213,7 @@ import AlertError from '../../../Layouts/AlertError'
 import Loader from '../../../Layouts/Loader'
 import { createToast } from 'mosha-vue-toastify';
 import "mosha-vue-toastify/dist/style.css"
+// import { jsPDF } from "jspdf";
 export default {
     components: {
         AlertError,
@@ -452,6 +456,12 @@ export default {
                         {},
                     )
                 })
+        },
+        bluetoothPrintTicket(code) {
+            console.log(code)
+            let resolved = this.$router.resolve({name: 'pdfreport', params: { code: code }})
+
+            window.open(resolved.href, code, "width=50")
         },
         ProcessPayment() {
             let data = this.pay

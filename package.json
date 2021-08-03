@@ -18,6 +18,7 @@
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "core-js": "^3.6.5",
     "js-cookie": "^2.2.1",
+    "jspdf": "^2.3.1",
     "jw-vue-pagination": "^1.0.3",
     "moment": "^2.29.1",
     "mosha-vue-toastify": "^1.0.11",
