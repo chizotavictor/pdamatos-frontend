@@ -3,8 +3,8 @@ import http from "./http-common";
 class Service {
   constructor() {
     // check again
-    // this.baseUrl = "http://localhost/pdamatos/index.php/api";
-    this.baseUrl = "https://pdamatos.ltd/v1/public/index.php/api"; //"http://localhost/pdamatos/api"
+    this.baseUrl = "http://localhost/pdamatos/index.php/api";
+    // this.baseUrl = "https://pdamatos.ltd/v1/public/index.php/api"; //"http://localhost/pdamatos/api"
     this.authorization = "?token=" + localStorage.getItem("_key");
 
     const token = localStorage.getItem("_key");
