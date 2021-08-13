@@ -213,7 +213,6 @@ import AlertError from '../../../Layouts/AlertError'
 import Loader from '../../../Layouts/Loader'
 import { createToast } from 'mosha-vue-toastify';
 import "mosha-vue-toastify/dist/style.css"
-// import { jsPDF } from "jspdf";
 export default {
     components: {
         AlertError,
@@ -433,29 +432,31 @@ export default {
                 })
         },
         printTicket(code){
-            this.isLoading = true
-            Call.PrintGameTicket(code)
-                .then((data) => {
-                    this.isLoading = false
-                    this.$notification.show(
-                        'Printer',
-                        {
-                            body: 'Receipt printing inititated. Processing ...(' + data.data.status + ')',
-                        },
-                        {},
-                    )
-                })
-                .catch(err => {
+            console.log(code)      
+            
+            // this.isLoading = true
+            // Call.PrintGameTicket(code)
+            //     .then((data) => {
+            //         this.isLoading = false
+            //         this.$notification.show(
+            //             'Printer',
+            //             {
+            //                 body: 'Receipt printing inititated. Processing ...(' + data.data.status + ')',
+            //             },
+            //             {},
+            //         )
+            //     })
+            //     .catch(err => {
                     
-                    this.isLoading = false
-                    this.$notification.show(
-                        'Printer Error',
-                        {
-                            body: "Receipt error occurred. " + err.response.data.message,
-                        },
-                        {},
-                    )
-                })
+            //         this.isLoading = false
+            //         this.$notification.show(
+            //             'Printer Error',
+            //             {
+            //                 body: "Receipt error occurred. " + err.response.data.message,
+            //             },
+            //             {},
+            //         )
+            //     })
         },
         bluetoothPrintTicket(code) {
             console.log(code)

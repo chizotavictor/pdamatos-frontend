@@ -17,6 +17,8 @@
     "axios": "^0.21.0",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "core-js": "^3.6.5",
+    "escpos": "^3.0.0-alpha.6",
+    "escpos-usb": "^3.0.0-alpha.4",
     "js-cookie": "^2.2.1",
     "jspdf": "^2.3.1",
     "jw-vue-pagination": "^1.0.3",
