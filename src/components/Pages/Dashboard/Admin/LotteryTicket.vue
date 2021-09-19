@@ -162,7 +162,7 @@
                         <span class="font-mono" style="font-weight:bold; font-size:25px;text-decoration:underline">GAME TICKET INVOICE</span>
                         <div class="mt-5">
                             <ul class="font-mono" style="font-weight:bold;font-size:20px;">
-                                <li>Payment Status: <span class="text-red-600">{{payment.payingTicketObject.status}}</span> <span v-if="payment.payingTicketObject.status == 'Pending'"><button class="text-center ml-10 font-small text-green-700" v-if="getTickets.code" @click="printTicket(getTickets.code)">Print Ticket <i class="fa fa-print"></i></button></span></li>
+                                <li>Payment Status: <span class="text-red-600">{{payment.payingTicketObject.status}}</span> <span v-if="payment.payingTicketObject.status == 'Pending'"><button class="text-center ml-10 font-small text-green-700" v-if="getTickets.code" @click="printTicket(payment.payingTicketObject.code)">Print Ticket <i class="fa fa-print"></i></button></span></li>
                                 <li>Ticket No: <span>{{payment.payingTicketObject.code}}</span></li>
                                 <li>Stack: <span class="text-blue-900 bg-white px-3">{{money_format(payment.payingTicketObject.cost)}}</span></li>
                                 <li>Potential Win: <span class="text-green-900">{{money_format(payment.payingTicketObject.potential_win)}}</span></li>
@@ -170,7 +170,7 @@
                             </ul>
                         </div>
                         <div class="row items-center">
-                            <button class="text-center font-small text-black" v-if="payment.payingTicketObject.status != 'Pending'" @click="printTicket(getTickets.code)">Print Ticket <i class="fa fa-print"></i></button>
+                            <button class="text-center font-small text-black" v-if="payment.payingTicketObject.status != 'Pending'" @click="printTicket(payment.payingTicketObject.code)">Print Ticket <i class="fa fa-print"></i></button>
                         </div>
                         <div class="row items-center">
                             <button class="text-center font-small text-black" v-if="payment.payingTicketObject.status != 'Pending'" @click="bluetoothPrintTicket(payment.payingTicketObject.code)">Print Ticket via Bluetooth Printer<i class="fa fa-print"></i></button>
@@ -431,35 +431,32 @@ export default {
                     })
                 })
         },
-        printTicket(code){
-            console.log(code)      
-            
-            // this.isLoading = true
-            // Call.PrintGameTicket(code)
-            //     .then((data) => {
-            //         this.isLoading = false
-            //         this.$notification.show(
-            //             'Printer',
-            //             {
-            //                 body: 'Receipt printing inititated. Processing ...(' + data.data.status + ')',
-            //             },
-            //             {},
-            //         )
-            //     })
-            //     .catch(err => {
+        async printTicket(code){
+            this.isLoading = true
+            Call.PrintGameTicket(code)
+                .then((data) => {
+                    this.isLoading = false
+                    this.$notification.show(
+                        'Printer',
+                        {
+                            body: 'Receipt printing inititated. Processing ...(' + data.data.status + ')',
+                        },
+                        {},
+                    )
+                })
+                .catch(err => {
                     
-            //         this.isLoading = false
-            //         this.$notification.show(
-            //             'Printer Error',
-            //             {
-            //                 body: "Receipt error occurred. " + err.response.data.message,
-            //             },
-            //             {},
-            //         )
-            //     })
+                    this.isLoading = false
+                    this.$notification.show(
+                        'Printer Error',
+                        {
+                            body: "Receipt error occurred. " + err.response.data.message,
+                        },
+                        {},
+                    )
+                })
         },
         bluetoothPrintTicket(code) {
-            console.log(code)
             let resolved = this.$router.resolve({name: 'pdfreport', params: { code: code }})
 
             window.open(resolved.href, code, "width=50")
