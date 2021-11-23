@@ -3,7 +3,7 @@ import axios from "axios"
 // let headers = {}
 // headers['Accept'] = "application/json"
 // headers['Content-Type'] = "appliation/json"
-
+//
 
 let http = axios.create({ 
     timeout: 9000
